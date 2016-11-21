@@ -2,6 +2,7 @@
 
 namespace Aerian\Blueprint\Adaptor;
 
+use Aerian\Blueprint\Blueprint;
 use Aerian\Blueprint\AdaptorInterface;
 use Aerian\Database\Eloquent\Model as Model;
 use Doctrine\DBAL\Schema\Column;
@@ -37,7 +38,7 @@ class EloquentModel implements AdaptorInterface
             }
         }
 
-        return $blueprint;
+        return new Blueprint($blueprint);
     }
 
     /**
