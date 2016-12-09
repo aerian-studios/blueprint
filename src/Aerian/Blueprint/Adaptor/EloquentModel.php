@@ -31,9 +31,11 @@ class EloquentModel implements AdaptorInterface
 
             if ($name && $type) {
                 $blueprint[$name] = [
+                    'id' => $name,
                     'type' => $type,
                     'label' => $this->_getLabelForColumn($column),
                     'rules' => $this->_getRulesArrayForColumn($column),
+                    'value' => $model->$name
                 ];
             }
         }

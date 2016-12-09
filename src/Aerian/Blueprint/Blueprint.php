@@ -43,6 +43,14 @@ class Blueprint
         return $this->_blueprintArray;
     }
 
+    public function toNormalizedArray()
+    {
+        return [
+            'elements' => array_keys($this->_blueprintArray),
+            'elementsById' => $this->_blueprintArray
+        ];
+    }
+
     protected function _setProperty($property, $element, $value)
     {
         $this->_blueprintArray[$element][$property] = $value;
