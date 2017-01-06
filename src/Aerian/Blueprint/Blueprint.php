@@ -46,8 +46,8 @@ class Blueprint
     public function toNormalizedArray()
     {
         return [
-            'elements' => array_keys($this->_blueprintArray),
-            'elementsById' => $this->_blueprintArray
+            'elementIds' => array_keys($this->_blueprintArray),
+            'elements' => $this->_blueprintArray
         ];
     }
 
