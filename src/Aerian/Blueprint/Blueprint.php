@@ -43,6 +43,20 @@ class Blueprint
         return $this->_blueprintArray;
     }
 
+    public function setValue($element, $value)
+    {
+        return $this->_setProperty('value', $element, $value);
+    }
+
+    public function setValues(array $values)
+    {
+        foreach ($values as $element => $value) {
+            $this->setValue($element, $value);
+        }
+
+        return $this;
+    }
+
     public function toNormalizedArray()
     {
         return [
@@ -53,7 +67,9 @@ class Blueprint
 
     protected function _setProperty($property, $element, $value)
     {
-        $this->_blueprintArray[$element][$property] = $value;
+        if (isset($this->_blueprintArray[$element])) {
+            $this->_blueprintArray[$element][$property] = $value;
+        }
         return $this;
     }
 }
