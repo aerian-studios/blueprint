@@ -15,5 +15,5 @@ interface AdaptorInterface
      * @param $columnKey
      * @return mixed
      */
-    public function getLabelForColumnKey($columnKey);
+    //public function getLabelForColumnKey($columnKey);
 }
