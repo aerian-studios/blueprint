@@ -114,9 +114,7 @@ class EloquentModel implements AdaptorInterface
      */
     protected function _getLabelForColumn(Column $column)
     {
-        //@todo column heading map
-        //$this->_columns[$this->_model->getHeadingForColumn($column->getName())] = $column;
-        return $column->getName();
+        return $this->_model->getLabelForColumnKey($column->getName());
     }
 
     /**
