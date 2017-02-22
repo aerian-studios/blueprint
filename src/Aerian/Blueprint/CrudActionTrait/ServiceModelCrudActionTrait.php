@@ -11,6 +11,7 @@ trait ServiceModelCrudActionTrait
     protected $_model;
 
     /**
+     * returns a normalised array of entities based on the entity name (classic GET list API)
      * @param string $entityName
      * @param int $limit
      * @param int $offset
@@ -38,6 +39,11 @@ trait ServiceModelCrudActionTrait
         ];
     }
 
+    /**
+     * returns a blueprint normalised array for a given entityName
+     * @param string $entityName
+     * @return array
+     */
     public function blueprintForModel($entityName)
     {
         $this->_setModelByEntityName($entityName);
@@ -46,6 +52,12 @@ trait ServiceModelCrudActionTrait
 
     }
 
+    /**
+     * returns a blueprint normalised array for a given entity record using entityName and id
+     * @param string $entityName
+     * @param int $id
+     * @return array
+     */
     public function blueprintForRecord($entityName, $id)
     {
         $this->_setModelByEntityName($entityName);
