@@ -38,29 +38,32 @@ trait ServiceModelCrudActionTrait
         ];
     }
 
-    public function blueprint($entityName, $id = null)
+    public function blueprintForModel($entityName)
     {
         $this->_setModelByEntityName($entityName);
 
-        if ($id) {
-            $record = $this->_model->getRecord($id);
-            if ($record) {
-                $adaptor = new ServiceModelRecordAdaptor();
-                $model = $record;
-            } else {
-                $adaptor = null;
-                $model = null;
-                abort(404);
-            }
-        } else {
-            $adaptor = new ServiceModelAdaptor();
-            $model = $this->_model;
-        }
-
-        return $adaptor->blueprint($model)->toNormalizedArray();
+        return (new ServiceModelAdaptor())->blueprint($this->_model)->toNormalizedArray();
 
     }
 
+    public function blueprintForRecord($entityName, $id)
+    {
+        $this->_setModelByEntityName($entityName);
+
+        $record = $this->_model->getRecord($id);
+        if ($record) {
+            return (new ServiceModelRecordAdaptor())->blueprint($record)->toNormalizedArray();
+        } else {
+            abort(404);
+        }
+    }
+
+    /**
+     * saves an entity by PUTing data to API
+     * @param $entityName
+     * @param $id
+     * @return mixed
+     */
     public function save($entityName, $id)
     {
         $this->_setModelByEntityName($entityName);
