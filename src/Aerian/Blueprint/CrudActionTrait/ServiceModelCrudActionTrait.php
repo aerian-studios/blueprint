@@ -43,7 +43,7 @@ trait ServiceModelCrudActionTrait
         $this->_setModelByEntityName($entityName);
 
         if ($id) {
-            $record = $this->_model->getPlugin($id);
+            $record = $this->_model->getRecord($id);
             if ($record) {
                 $adaptor = new ServiceModelRecordAdaptor();
                 $model = $record;
@@ -65,7 +65,7 @@ trait ServiceModelCrudActionTrait
     {
         $this->_setModelByEntityName($entityName);
 
-        $record = $this->_model->putPlugin($id, request()->all());
+        $record = $this->_model->putRecord($id, request()->all());
 
         return (new ServiceModelRecordAdaptor())->blueprint($record)->toNormalizedArray();
     }
