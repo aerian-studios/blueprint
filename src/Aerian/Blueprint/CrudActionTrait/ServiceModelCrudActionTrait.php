@@ -28,13 +28,22 @@ trait ServiceModelCrudActionTrait
 
         //populate the itemIds and items arrays
         foreach ($collection as $item) {
-            $itemIds[] = $item->id;
-            $items[$item->id] = array_intersect_key($item->toArray(), array_flip($columns)); //only include the columns specified in the columns array
+
+            //prepare actions for this item
+            $actions = $item->getCrudListActions();
+            $actionIds = array_keys($actions);
+
+            //append the item
+            $items[$item->id] = [
+                'actionIds' => $actionIds,
+                'actions' => $actions,
+                'properties' => array_intersect_key($item->toArray(), array_flip($columns)) //only include the columns specified in the columns array
+            ];
         }
 
         return [
             'columns' => $columns,
-            'itemIds' => $itemIds,
+            'itemIds' => array_keys($items),
             'items' => $items
         ];
     }
