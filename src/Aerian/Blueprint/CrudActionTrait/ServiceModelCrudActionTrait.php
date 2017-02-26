@@ -13,23 +13,28 @@ trait ServiceModelCrudActionTrait
     /**
      * returns a normalised array of entities based on the entity name (classic GET list API)
      * @param string $entityName
-     * @param int $limit
-     * @param int $offset
      * @return array
      */
-    public function index($entityName, $limit = 50, $offset = 0)
+    public function index($entityName)
     {
         $this->_setModelByEntityName($entityName);
 
-        $collection = $this->_model->getCollection(['limit' => $limit, 'offset' => $offset]);
+        $defaultInputs = [
+            'limit' => 50,
+            'offset' => 0
+        ];
 
-        $itemIds = $items = []; //declare itemIds and items as empty arrays
+        //get a collection using supplied input merged with default as filters
+        $collection = $this->_model->getCollection(array_merge(request()->all(), $defaultInputs));
+
         $columns = $this->_model->getListColumns();
 
-        //populate the itemIds and items arrays
+        //populate items array
+        $items = [];
         foreach ($collection as $item) {
 
             //prepare actions for this item
+            //@todo should consider a default set for this model with overrides at item level only
             $actions = $item->getCrudListActions();
             $actionIds = array_keys($actions);
 
@@ -42,6 +47,8 @@ trait ServiceModelCrudActionTrait
         }
 
         return [
+            'totalCount' => $collection->getTotalCount(),
+            'offset' => $collection->getOffset(),
             'columns' => $columns,
             'itemIds' => array_keys($items),
             'items' => $items
