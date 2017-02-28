@@ -24,8 +24,10 @@ trait ServiceModelCrudActionTrait
             'offset' => 0
         ];
 
+        $filters = array_merge($defaultInputs, request()->all());
+
         //get a collection using supplied input merged with default as filters
-        $collection = $this->_model->getCollection(array_merge(request()->all(), $defaultInputs));
+        $collection = $this->_model->getCollection($filters);
 
         $columns = $this->_model->getListColumns();
 
