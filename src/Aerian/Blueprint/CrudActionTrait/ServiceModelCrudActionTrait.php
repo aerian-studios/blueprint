@@ -104,6 +104,23 @@ trait ServiceModelCrudActionTrait
     }
 
     /**
+     * Make a delete request to an API to delete the entity with the supplied name and id
+     * @param $entityName
+     * @param $id
+     * @return mixed
+     * @todo MASON-1274 this is untested
+     */
+    public function delete($entityName, $id)
+    {
+        $this->_setModelByEntityName($entityName);
+
+        $this->_model->deleteRecord($id);
+
+        //@todo not sure what to return on a delete request
+        return;
+    }
+
+    /**
      * takes an entityName e.g. 'product-category' and sets a model based on a facade accessor e.g. ProductCategoryModel
      * @param $entityName
      * @return $this
