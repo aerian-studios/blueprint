@@ -44,13 +44,14 @@ trait ServiceModelCrudActionTrait
             $items[$item->id] = [
                 'actionIds' => $actionIds,
                 'actions' => $actions,
-                'properties' => array_intersect_key($item->toArray(), array_flip($columns)) //only include the columns specified in the columns array
+                'properties' => array_intersect_key($item->toArray(), array_flip(array_keys($columns))) //only include the columns specified in the columns array
             ];
         }
 
         return [
             'totalCount' => $collection->getTotalCount(),
             'offset' => $collection->getOffset(),
+            'columnIds' => array_keys($columns),
             'columns' => $columns,
             'itemIds' => array_keys($items),
             'items' => $items
@@ -108,7 +109,6 @@ trait ServiceModelCrudActionTrait
      * @param $entityName
      * @param $id
      * @return mixed
-     * @todo MASON-1274 this is untested
      */
     public function delete($entityName, $id)
     {
