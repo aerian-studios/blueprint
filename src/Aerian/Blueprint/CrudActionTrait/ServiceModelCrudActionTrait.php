@@ -20,16 +20,24 @@ trait ServiceModelCrudActionTrait
         $this->_setModelByEntityName($entityName);
 
         $defaultInputs = [
+            'format' => 'json',
             'limit' => 50,
             'offset' => 0
         ];
 
+        //prepare filters using supplied input merged with defaults
         $filters = array_merge($defaultInputs, request()->all());
 
-        //get a collection using supplied input merged with default as filters
-        $collection = $this->_model->getCollection($filters);
+        return $this->_getListData($filters);
+    }
 
-        $columns = $this->_model->getListColumns();
+    private function _getListData(array $filters = [])
+    {
+        //get a collection object containing the data
+        $collection = $this->getModel()->getCollection($filters);
+
+        //find what columns have been configured for this model to be included in the output
+        $columns = $this->getModel()->getListColumns();
 
         //populate items array
         $items = [];
@@ -56,6 +64,7 @@ trait ServiceModelCrudActionTrait
             'itemIds' => array_keys($items),
             'items' => $items
         ];
+
     }
 
     /**
@@ -82,6 +91,7 @@ trait ServiceModelCrudActionTrait
         $this->_setModelByEntityName($entityName);
 
         $record = $this->_model->getRecord($id);
+
         if ($record) {
             return (new ServiceModelRecordAdaptor())->blueprint($record)->toNormalizedArray();
         } else {
@@ -154,5 +164,13 @@ trait ServiceModelCrudActionTrait
     protected function _getFacadeAccessorFromEntityName($entityName)
     {
         return studly_case($entityName) . 'Model';
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModel()
+    {
+        return $this->_model;
     }
 }
