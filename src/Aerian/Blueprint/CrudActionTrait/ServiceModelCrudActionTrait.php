@@ -59,6 +59,8 @@ trait ServiceModelCrudActionTrait
         return [
             'totalCount' => $collection->getTotalCount(),
             'offset' => $collection->getOffset(),
+            'count' => $collection->count(),
+            'limit' => $filters['limit'],
             'columnIds' => array_keys($columns),
             'columns' => $columns,
             'itemIds' => array_keys($items),
