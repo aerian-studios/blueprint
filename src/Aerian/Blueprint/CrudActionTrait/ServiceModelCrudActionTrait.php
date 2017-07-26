@@ -3,6 +3,7 @@
 namespace Aerian\Blueprint\CrudActionTrait;
 
 use Illuminate\Support\Facades\App;
+use Illuminate\Http\Response;
 use Aerian\Blueprint\Adaptor\ServiceModel as ServiceModelAdaptor;
 use Aerian\Blueprint\Adaptor\ServiceModelRecord as ServiceModelRecordAdaptor;
 
@@ -78,7 +79,54 @@ trait ServiceModelCrudActionTrait
 
     protected function _outputCSV(array $params = [])
     {
-        return [];
+        $filename = "temp.csv";
+        $handle = fopen($filename, 'w+');
+
+        $headingRow = true;
+        $params['offset'] = 0; //start at the beginning
+        $params['limit'] = 100; //batch size
+
+        while (true) {
+            $data = $this->_getListData($params);
+
+            if ($data['count'] == 0) {
+                break;
+            }
+
+            //write rows
+            foreach ($data['items'] as $item) {
+                //write headers
+                if ($headingRow) {
+                    $headings = array();
+                    foreach ($data['columnIds'] as $columnId) {
+                        $label = (isset($data['columns'][$columnId]['label'])) ? $data['columns'][$columnId]['label'] : $columnId;
+                        //excel bug fix
+                        if ($label === "id") {
+                            $label = 'Id';
+                        }
+                        $headings[] = $label;
+                    }
+                    fputcsv($handle, $headings, ',', '"');
+                    $headingRow = false;
+                }
+                // add a tab to the end of each value
+                // this forces excel to treat each value
+                // as text and not try to parse dates etc
+                foreach($item['properties'] as $key => $value) {
+                    //  replace – with regular - and strip tags
+                    $item['properties'][$key] = str_replace('–','-', strip_tags($value)) . "\t";
+                }
+
+                fputcsv($handle, $item['properties'], ',', '"');
+            }
+
+            $params['offset'] += $params['limit'];
+        }
+
+        fclose($handle);
+        $headers = ['Content-Type' => 'text/csv'];
+        return response()->download($filename, 'foo' . $filename, $headers);
+
     }
 
     /**
