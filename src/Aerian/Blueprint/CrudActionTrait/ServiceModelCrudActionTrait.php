@@ -79,7 +79,7 @@ trait ServiceModelCrudActionTrait
 
     protected function _outputCSV(array $params = [])
     {
-        $filename = "temp.csv";
+        $filename = date("Y-m-d-H-i-s-") . $this->getModel()->getEntityName() . ".csv";
         $handle = fopen($filename, 'w+');
 
         $headingRow = true;
@@ -125,7 +125,7 @@ trait ServiceModelCrudActionTrait
 
         fclose($handle);
         $headers = ['Content-Type' => 'text/csv'];
-        return response()->download($filename, 'foo' . $filename, $headers);
+        return response()->download($filename, $filename, $headers);
 
     }
 
@@ -207,6 +207,7 @@ trait ServiceModelCrudActionTrait
      * Based on an entity name (e.g. 'product-category') sets an instance of an Aerian/ServiceModel\Model to the
      * ::_model property of this object
      * @param string $facadeAccessorString
+     * @todo the model set should probably implement an interface
      * @return $this
      */
     protected function _setModelByFacadeAccessor($facadeAccessorString)
