@@ -19,22 +19,29 @@ trait ServiceModelCrudActionTrait
     {
         $this->_setModelByEntityName($entityName);
 
-        $defaultInputs = [
+        $defaultParams = [
             'format' => 'json',
             'limit' => 50,
             'offset' => 0
         ];
 
         //prepare filters using supplied input merged with defaults
-        $filters = array_merge($defaultInputs, request()->all());
+        $params = array_merge($defaultParams, request()->all());
 
-        return $this->_getListData($filters);
+        switch ($params['format']) {
+            case 'csv':
+                return $this->_outputCSV($params);
+                break;
+            default:
+                return $this->_getListData($params);
+                break;
+        }
     }
 
-    private function _getListData(array $filters = [])
+    protected function _getListData(array $params = [])
     {
         //get a collection object containing the data
-        $collection = $this->getModel()->getCollection($filters);
+        $collection = $this->getModel()->getCollection($params);
 
         //find what columns have been configured for this model to be included in the output
         $columns = $this->getModel()->getListColumns();
@@ -60,13 +67,18 @@ trait ServiceModelCrudActionTrait
             'totalCount' => $collection->getTotalCount(),
             'offset' => $collection->getOffset(),
             'count' => $collection->count(),
-            'limit' => $filters['limit'],
+            'limit' => $params['limit'],
             'columnIds' => array_keys($columns),
             'columns' => $columns,
             'itemIds' => array_keys($items),
             'items' => $items
         ];
 
+    }
+
+    protected function _outputCSV(array $params = [])
+    {
+        return [];
     }
 
     /**
