@@ -111,7 +111,7 @@ trait ServiceModelCrudActionTrait
 
     protected function _outputCSV(array $params = [])
     {
-        $basePath = storage_path() . DIRECTORY_SEPARATOR . 'csv-downloads';
+        $basePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'csv-downloads';
         if(!File::exists($basePath)) {
             File::makeDirectory($basePath);
         }
