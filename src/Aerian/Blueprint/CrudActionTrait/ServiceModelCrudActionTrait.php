@@ -34,22 +34,47 @@ trait ServiceModelCrudActionTrait
                 return $this->_outputCSV($params);
                 break;
             default:
-                return $this->_getListData($params);
+                return $this->_getListData($params, 'list');
                 break;
         }
     }
 
-    protected function _getListData(array $params = [])
+    /**
+     * @param array $params filter params to be used when fetching the list data
+     * @param array|null|'list' $columns the columns to include in the output. null = all columns; 'list' = columns configured on the model as the list columns
+     * @return array
+     */
+    protected function _getListData(array $params = [], $columnIds = null)
     {
         //get a collection object containing the data
         $collection = $this->getModel()->getCollection($params);
 
-        //find what columns have been configured for this model to be included in the output
-        $columns = $this->getModel()->getListColumns();
+        //use provided columns, or default the columns configured on the model for 'lists'
+        if ($columnIds === 'list') {
+            $columns = $this->getModel()->getListColumns();
+            $columnIds = array_keys($columns);
+        } elseif ($columnIds === null) {
+            //if $columnIds is null, use the blueprint to get all columns - n.b. the API may not return all these, we don't know yet
+            $columns = $this->getModel()->getAllColumns();
+            $columnIds = array_keys($columns);
+        }
 
         //populate items array
         $items = [];
+        $i = 1;
         foreach ($collection as $item) {
+            $itemAsArray = $item->toArray();
+
+            //sync up the columns we intend to display with what's returned from the API
+            //exclude any requested columns that the API has not returned
+            //only do this on the first row of the data set
+            if ($i === 1) {
+                $columns = array_intersect_key($columns, array_flip(array_keys($itemAsArray)));
+                $columnIds = array_keys($columns);
+            }
+
+            //get the properties from the item that we want as per the columnIds array
+            $properties = array_intersect_key($itemAsArray, array_flip($columnIds));
 
             //prepare actions for this item
             //@todo should consider a default set for this model with overrides at item level only
@@ -60,16 +85,22 @@ trait ServiceModelCrudActionTrait
             $items[$item->id] = [
                 'actionIds' => $actionIds,
                 'actions' => $actions,
-                'properties' => array_intersect_key($item->toArray(), array_flip(array_keys($columns))) //only include the columns specified in the columns array
+                'properties' => $properties //only include the columns specified in the columnIds array
             ];
+
+            $i++;
         }
+
+        //ensure columns and columnIds are arrays
+        $columnIds = (!is_array($columnIds)) ? [] : $columnIds;
+        $columns = (!is_array($columns)) ? [] : $columns;
 
         return [
             'totalCount' => $collection->getTotalCount(),
             'offset' => $collection->getOffset(),
             'count' => $collection->count(),
             'limit' => $params['limit'],
-            'columnIds' => array_keys($columns),
+            'columnIds' => $columnIds,
             'columns' => $columns,
             'itemIds' => array_keys($items),
             'items' => $items
@@ -87,7 +118,7 @@ trait ServiceModelCrudActionTrait
         $params['limit'] = 100; //batch size
 
         while (true) {
-            $data = $this->_getListData($params);
+            $data = $this->_getListData($params, null /*get all columns, not just those configured for the list view*/);
 
             if ($data['count'] == 0) {
                 break;
