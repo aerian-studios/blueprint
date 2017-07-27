@@ -116,7 +116,7 @@ trait ServiceModelCrudActionTrait
             File::makeDirectory($basePath);
         }
 
-        $filename = date("Y-m-d-H-i-s-") . $this->getModel()->getEntityName() . '-' . rand() . ".csv";
+        $filename = date("Y-m-d-H-i-s-") . $this->getModel()->getEntityName() . '-' . App::environment() . '-' . rand() . ".csv";
         $filePath = $basePath . DIRECTORY_SEPARATOR . $filename;
         $handle = fopen($filePath, 'w+');
 
