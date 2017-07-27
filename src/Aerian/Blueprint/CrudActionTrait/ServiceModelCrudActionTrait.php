@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Http\Response;
 use Aerian\Blueprint\Adaptor\ServiceModel as ServiceModelAdaptor;
 use Aerian\Blueprint\Adaptor\ServiceModelRecord as ServiceModelRecordAdaptor;
+use Illuminate\Support\Facades\File;
 
 trait ServiceModelCrudActionTrait
 {
@@ -110,11 +111,17 @@ trait ServiceModelCrudActionTrait
 
     protected function _outputCSV(array $params = [])
     {
-        $filename = date("Y-m-d-H-i-s-") . $this->getModel()->getEntityName() . ".csv";
-        $handle = fopen($filename, 'w+');
+        $basePath = storage_path() . DIRECTORY_SEPARATOR . 'csv-downloads';
+        if(!File::exists($basePath)) {
+            File::makeDirectory($basePath);
+        }
+
+        $filename = date("Y-m-d-H-i-s-") . $this->getModel()->getEntityName() . '-' . rand() . ".csv";
+        $filePath = $basePath . DIRECTORY_SEPARATOR . $filename;
+        $handle = fopen($filePath, 'w+');
 
         $headingRow = true;
-        $params['offset'] = 0; //start at the beginning
+        $params['offset'] = 0; //start at the beginning regardless of the offset passed
         $params['limit'] = 100; //batch size
 
         while (true) {
@@ -156,7 +163,7 @@ trait ServiceModelCrudActionTrait
 
         fclose($handle);
         $headers = ['Content-Type' => 'text/csv'];
-        return response()->download($filename, $filename, $headers)->deleteFileAfterSend(true);
+        return response()->download( $filePath, $filename, $headers)->deleteFileAfterSend(true);
 
     }
 
