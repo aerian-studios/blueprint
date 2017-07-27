@@ -125,7 +125,7 @@ trait ServiceModelCrudActionTrait
 
         fclose($handle);
         $headers = ['Content-Type' => 'text/csv'];
-        return response()->download($filename, $filename, $headers);
+        return response()->download($filename, $filename, $headers)->deleteFileAfterSend(true);
 
     }
 
