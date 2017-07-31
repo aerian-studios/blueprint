@@ -120,7 +120,7 @@ trait ServiceModelCrudActionTrait
         $filePath = $basePath . DIRECTORY_SEPARATOR . $filename;
         $handle = fopen($filePath, 'w+');
 
-        $headingRow = true;
+        $outputHeadingRow = true;
         $params['offset'] = 0; //start at the beginning regardless of the offset passed
         $params['limit'] = 100; //batch size
 
@@ -133,29 +133,33 @@ trait ServiceModelCrudActionTrait
 
             //write rows
             foreach ($data['items'] as $item) {
-                //write headers
-                if ($headingRow) {
-                    $headings = array();
+                
+                //write heading row into spreadsheet
+                if ($outputHeadingRow) {
+                    $headingRowLabels = [];
                     foreach ($data['columnIds'] as $columnId) {
-                        $label = (isset($data['columns'][$columnId]['label'])) ? $data['columns'][$columnId]['label'] : $columnId;
+                        $headingRowLabel = (isset($data['columns'][$columnId]['label'])) ? $data['columns'][$columnId]['label'] : $columnId;
                         //excel bug fix
-                        if ($label === "id") {
-                            $label = 'Id';
+                        if ($headingRowLabel === "id") {
+                            $headingRowLabel = 'Id';
                         }
-                        $headings[] = $label;
+                        $headingRowLabels[] = $headingRowLabel;
                     }
-                    fputcsv($handle, $headings, ',', '"');
-                    $headingRow = false;
+                    fputcsv($handle, $headingRowLabels, ',', '"');
+                    $outputHeadingRow = false;
                 }
+
+                $rowValues = [];
+
                 // add a tab to the end of each value
                 // this forces excel to treat each value
                 // as text and not try to parse dates etc
-                foreach($item['properties'] as $key => $value) {
+                foreach($data['columnIds'] as $columnId) {
                     //  replace – with regular - and strip tags
-                    $item['properties'][$key] = str_replace('–','-', strip_tags($value)) . "\t";
+                    $rowValues[] = str_replace('–','-', strip_tags($item['properties'][$columnId])) . "\t";
                 }
 
-                fputcsv($handle, $item['properties'], ',', '"');
+                fputcsv($handle, $rowValues, ',', '"');
             }
 
             $params['offset'] += $params['limit'];
