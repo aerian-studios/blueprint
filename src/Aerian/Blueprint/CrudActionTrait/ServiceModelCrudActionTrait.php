@@ -101,6 +101,10 @@ trait ServiceModelCrudActionTrait
             'offset' => $collection->getOffset(),
             'count' => $collection->count(),
             'limit' => $params['limit'],
+            'actions' => [
+                'create' => $this->getModel()->isCreatable(),
+                'downloadCSV' => $this->getModel()->isDownloadableAsCSV()
+            ],
             'columnIds' => $columnIds,
             'columns' => $columns,
             'itemIds' => array_keys($items),
@@ -204,17 +208,27 @@ trait ServiceModelCrudActionTrait
     }
 
     /**
-     * saves an entity by PUTing data to API
+     * updates an entity by POSTing data to API
+     * @param $entityName
+     * @return mixed
+     */
+    public function create($entityName)
+    {
+        $this->_setModelByEntityName($entityName);
+        $record = $this->_model->postRecord(request()->all());
+        return (new ServiceModelRecordAdaptor())->blueprint($record)->toNormalizedArray();
+    }
+
+    /**
+     * updates an entity by PUTing data to API
      * @param $entityName
      * @param $id
      * @return mixed
      */
-    public function save($entityName, $id)
+    public function update($entityName, $id)
     {
         $this->_setModelByEntityName($entityName);
-
         $record = $this->_model->putRecord($id, request()->all());
-
         return (new ServiceModelRecordAdaptor())->blueprint($record)->toNormalizedArray();
     }
 
@@ -227,9 +241,7 @@ trait ServiceModelCrudActionTrait
     public function delete($entityName, $id)
     {
         $this->_setModelByEntityName($entityName);
-
         $this->_model->deleteRecord($id);
-
         //@todo not sure what to return on a delete request
         return;
     }
