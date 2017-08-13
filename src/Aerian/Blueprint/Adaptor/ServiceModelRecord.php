@@ -17,7 +17,7 @@ class ServiceModelRecord implements AdaptorInterface
 
         return (new BlueprintServiceModelAdaptor())
             ->blueprint($record->getModel())
-            ->setValues($record->toArray());
+            ->setValues(array_merge($record->toArray(), $record->getManyToManyValues()));
     }
 }
 
