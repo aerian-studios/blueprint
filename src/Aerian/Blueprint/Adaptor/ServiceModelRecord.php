@@ -2,11 +2,11 @@
 
 namespace Aerian\Blueprint\Adaptor;
 
-use Aerian\Blueprint\AdaptorInterface;
+use Aerian\Blueprint\RecordAdaptorInterface;
 use Aerian\ServiceModel\RecordAbstract;
 use Aerian\Blueprint\Adaptor\ServiceModel as BlueprintServiceModelAdaptor;
 
-class ServiceModelRecord implements AdaptorInterface
+class ServiceModelRecord implements RecordAdaptorInterface
 {
 
     public function blueprint($record)

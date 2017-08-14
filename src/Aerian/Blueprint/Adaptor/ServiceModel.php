@@ -2,11 +2,11 @@
 
 namespace Aerian\Blueprint\Adaptor;
 
-use Aerian\Blueprint\AdaptorInterface;
+use Aerian\Blueprint\ModelAdaptorInterface;
 use Aerian\Blueprint\Blueprint;
 use Aerian\ServiceModel\ModelAbstract;
 
-class ServiceModel implements AdaptorInterface
+class ServiceModel implements ModelAdaptorInterface
 {
 
     public function blueprint($model)

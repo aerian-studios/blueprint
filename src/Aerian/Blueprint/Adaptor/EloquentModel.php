@@ -3,13 +3,13 @@
 namespace Aerian\Blueprint\Adaptor;
 
 use Aerian\Blueprint\Blueprint;
-use Aerian\Blueprint\AdaptorInterface;
+use Aerian\Blueprint\ModelAdaptorInterface;
 use Aerian\Database\Eloquent\Model as Model;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Types\BooleanType;
 use Doctrine\DBAL\Types\StringType;
 
-class EloquentModel implements AdaptorInterface
+class EloquentModel implements ModelAdaptorInterface
 {
     protected $_columns;
 

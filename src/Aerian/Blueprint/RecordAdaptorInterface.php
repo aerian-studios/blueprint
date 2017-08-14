@@ -1,7 +1,7 @@
 <?php
 namespace Aerian\Blueprint;
 
-interface AdaptorInterface
+interface RecordAdaptorInterface
 {
     /**
      * takes a model, and converts it into a blueprint array object
