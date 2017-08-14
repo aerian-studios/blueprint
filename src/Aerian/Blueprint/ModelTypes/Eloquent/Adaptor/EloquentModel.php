@@ -1,6 +1,6 @@
 <?php
 
-namespace Aerian\Blueprint\Adaptor;
+namespace Aerian\Blueprint\ModelTypes\Eloquent\Adaptor;
 
 use Aerian\Blueprint\Blueprint;
 use Aerian\Blueprint\ModelAdaptorInterface;

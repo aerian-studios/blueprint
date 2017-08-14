@@ -1,11 +1,11 @@
 <?php
-namespace Aerian\Blueprint\CrudActionTrait;
+namespace Aerian\Blueprint\ModelTypes\Eloquent;
 
 /**
  * Trait CrudActionTrait
  * This trait provides functionality for CRUD controllers including implementing default actions
  */
-trait EloquentModelCrudActionTrait
+trait CrudActionTrait
 {
     /**
      * @var

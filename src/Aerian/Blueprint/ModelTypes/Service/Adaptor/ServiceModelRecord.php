@@ -1,10 +1,10 @@
 <?php
 
-namespace Aerian\Blueprint\Adaptor;
+namespace Aerian\Blueprint\ModelTypes\Service\Adaptor;
 
 use Aerian\Blueprint\RecordAdaptorInterface;
 use Aerian\ServiceModel\RecordAbstract;
-use Aerian\Blueprint\Adaptor\ServiceModel as BlueprintServiceModelAdaptor;
+use Aerian\Blueprint\ModelTypes\Service\Adaptor\ServiceModel as BlueprintServiceModelAdaptor;
 
 class ServiceModelRecord implements RecordAdaptorInterface
 {

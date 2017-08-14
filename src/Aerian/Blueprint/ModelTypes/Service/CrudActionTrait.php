@@ -1,14 +1,13 @@
 <?php
 
-namespace Aerian\Blueprint\CrudActionTrait;
+namespace Aerian\Blueprint\ModelTypes\Service;
 
 use Illuminate\Support\Facades\App;
-use Illuminate\Http\Response;
-use Aerian\Blueprint\Adaptor\ServiceModel as ServiceModelAdaptor;
-use Aerian\Blueprint\Adaptor\ServiceModelRecord as ServiceModelRecordAdaptor;
+use Aerian\Blueprint\ModelTypes\Service\Adaptor\ServiceModel as ServiceModelAdaptor;
+use Aerian\Blueprint\ModelTypes\Service\Adaptor\ServiceModelRecord as ServiceModelRecordAdaptor;
 use Illuminate\Support\Facades\File;
 
-trait ServiceModelCrudActionTrait
+trait CrudActionTrait
 {
     protected $_model;
 
