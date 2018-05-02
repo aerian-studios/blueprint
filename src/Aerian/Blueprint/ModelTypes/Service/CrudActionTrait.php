@@ -125,7 +125,7 @@ trait CrudActionTrait
 
         $outputHeadingRow = true;
         $params['offset'] = 0; //start at the beginning regardless of the offset passed
-        $params['limit'] = 100; //batch size
+        $params['limit'] = 200; //batch size
 
         while (true) {
             $data = $this->_getListData($params, null /*get all columns, not just those configured for the list view*/);
