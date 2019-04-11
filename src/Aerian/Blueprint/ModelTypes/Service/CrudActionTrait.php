@@ -102,7 +102,9 @@ trait CrudActionTrait
             'limit' => $params['limit'],
             'actions' => [
                 'create' => $this->getModel()->isCreatable(),
-                'downloadCSV' => $this->getModel()->isDownloadableAsCSV()
+                'downloadCSV' => $this->getModel()->isDownloadableAsCSV(),
+                'pauseAll' => $this->getModel()->isPausableAll(),
+                'activateAll' => $this->getModel()->isActivateableAll()
             ],
             'columnIds' => $columnIds,
             'columns' => $columns,
