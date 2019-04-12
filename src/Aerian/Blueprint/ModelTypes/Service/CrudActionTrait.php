@@ -100,12 +100,7 @@ trait CrudActionTrait
             'offset' => $collection->getOffset(),
             'count' => $collection->count(),
             'limit' => $params['limit'],
-            'actions' => [
-                'create' => $this->getModel()->isCreatable(),
-                'downloadCSV' => $this->getModel()->isDownloadableAsCSV(),
-                'pauseAll' => $this->getModel()->isPausableAll(),
-                'activateAll' => $this->getModel()->isActivateableAll()
-            ],
+            'actions' => $this->_getCollectionActions(),
             'columnIds' => $columnIds,
             'columns' => $columns,
             'itemIds' => array_keys($items),
@@ -113,6 +108,20 @@ trait CrudActionTrait
         ];
 
     }
+
+    protected function _getDefaultCollectionActions()
+    {
+        return [
+            'create' => $this->getModel()->isCreatable(),
+            'downloadCSV' => $this->getModel()->isDownloadableAsCSV(),
+        ];
+    }
+    
+    protected function _getCollectionActions()
+    {
+        return $this->_getDefaultCollectionActions();
+    }
+
 
     protected function _outputCSV(array $params = [])
     {
